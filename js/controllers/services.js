@@ -1,7 +1,7 @@
 /**
  * Created by Shvecov on 24.03.2015.
  */
-var NotificationService = function( notificationArchive){
+/*var NotificationService = function( notificationArchive){
     this.MAX_LEN = 10;
     this.notificationArchive = notificationArchive;
     this.notifications = [];
@@ -17,4 +17,4 @@ NotificationService.prototype.push = function(notification){
 };
 NotificationService.prototype.getCurrent = function(){
     return this.notifications;
-};
+};*/

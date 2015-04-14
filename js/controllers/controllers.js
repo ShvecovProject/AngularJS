@@ -1,10 +1,47 @@
 /**
  * Created by Shvecov on 23.03.2015.
  */
-var helloApp = angular.module('helloApp', []);
-helloApp.value('notificationArchive', new NotificationArchive());
-helloApp.constant('MAX_LEN',10);
-//helloApp.service('notificationService', NotificationService);
+var notificationArhive = function(){
+    return {
+        archive:function(notificationToArchive){
+            console.log("NotificationToArhive "+ notificationToArchive);
+        }
+    }
+};
+
+var helloApp = angular.module('helloApp', ['ui.keypress']);
+helloApp.service('notificationArhive',notificationArhive );
+helloApp.provider('notificationsService',function(){
+    var config = {
+        maxLen:10
+    };
+    var notifications = [];
+
+    return{
+        setMaxLength: function(maxLen){
+            config.maxLen = maxLen||config.maxLen;
+        },
+        $get:function(notificationArhive){
+            return {
+                push:function(notification){
+                    var notificationToArchive,
+                        newLen = notifications.unshift(notification);
+                   if (newLen > config.maxLen) {
+                        notificationToArchive = notifications.pop();
+                       notificationArhive.archive(notificationToArchive);
+                    }
+                    return true;
+                },
+                getCurrent: function () {
+                    return notifications;
+                }
+            }
+        }
+    }
+});
+helloApp.config(function(notificationsServiceProvider){
+    notificationsServiceProvider.setMaxLength(15);
+});
 helloApp.controller('HelloController',function($scope){
     $scope.getName = function(){
         return $scope.name;
@@ -20,6 +57,21 @@ helloApp.controller('WorldController', function($scope){
         return (countryPopulation/$scope.population)*100;
     }
 });
+
+helloApp.controller("MessageController",function($scope, notificationsService){
+        $scope.getCurrentNotif = function(){
+          return $scope.notification;
+        };
+        $scope.addToNotif = function(notification){
+            var flag = notificationsService.push(notification);
+            if(flag){
+                $scope.notification = "";
+                console.log("Complete.....");
+            }
+        }
+
+});
+
 
 /*helloApp.factory('notificationsService',function(notificationArchive, MAX_LEN) {
        var notifications = [];
@@ -37,30 +89,5 @@ helloApp.controller('WorldController', function($scope){
         }
     }
 });*/
-helloApp.provider('notificationsService',function(){
-   var config = {
-     maxLen:10
-   };
-    var notifications = [];
 
-    return{
-        setMaxLength: function(maxLen){
-            config.maxLen = maxLen||config.maxLen;
-        },
-        $get:function(notificationArchive){
-            return {
-                push:function(){
-                    var notificationToArchive,
-                        newLen = this.notifications.unshift(notification);
-                    if (newLen > config.maxLen) {
-                        notificationToArchive = notifications.pop();
-                        notificationArchive.archive(notificationToArchive);
-                    }
-                },
-                getCurrent: function () {
-                    return notifications;
-                }
-            }
-        }
-    }
-});
+
