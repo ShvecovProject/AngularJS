@@ -44,7 +44,24 @@ angular.module('helloApp', ['ui.keypress'])
 })
 
 .controller("HttpFunctionsController",function($scope, $http){
+    var getAllUsers = function() {
+        var response = $http.get(httpUrl, {
+            params: {
+                apiKey: "H7NnGFZwutQwxFP6T8Kc_XhkQe4Z4ygX"
+            }
+        });
+        response.success(function (data, status, headers, config) {
+            console.log("Users has been getting " + data);
+            $scope.users = data;
+        });
+        response.error(function () {
+
+        });
+    };
+
     var httpUrl = "https://api.mongolab.com/api/1/databases/angular_js/collections/users";
+    getAllUsers();
+
 
     $scope.addUser = function() {
         var newUser = {
@@ -66,9 +83,23 @@ angular.module('helloApp', ['ui.keypress'])
 
         $scope.userEmail = "";
         $scope.userName = "";
-    }
-})
+        getAllUsers();
+    };
+    $scope.deleteUser=function(idUser) {
+        var response = $http.delete(httpUrl,idUser,{
+            params: {
+                apiKey: "H7NnGFZwutQwxFP6T8Kc_XhkQe4Z4ygX"
+            }
+        });
+        response.success(function (data, status, headers, config) {
+            console.log("Users has been delete " + data);
+        });
+        response.error(function () {
 
+        });
+        getAllUsers();
+    };
+})
 .provider('notificationsService',function(){
     var config = {
         maxLen:10

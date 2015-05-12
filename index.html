@@ -27,6 +27,24 @@
     </button>
 </div>
 <div ng-controller="HttpFunctionsController">
+    <div>
+        <h4>All Users:</h4>
+        <table>
+            <tr>
+                <th>User Name</th>
+                <th>User E-mail</th>
+            </tr>
+            <tr  ng-repeat="user in users">
+                <td>{{user.userName}}</td>
+                <td>{{user.userEmail}}</td>
+                <td>
+                    <button type="button" ng-click="deleteUser(user._id)">
+                     Delete
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
     <h4>Add New User:</h4>
     <label>User Name:</label>
     <input type="text" ng-model="userName"/>
