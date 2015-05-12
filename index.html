@@ -26,5 +26,14 @@
             Add to Arhive
     </button>
 </div>
+<div ng-controller="HttpFunctionsController">
+    <h4>Add New User:</h4>
+    <label>User Name:</label>
+    <input type="text" ng-model="userName"/>
+    <label>E-mail:</label>
+    <input type="email" ng-model="userEmail"/>
+    <button ng-click="addUser()">Add</button>
+</div>
+</div>
 </body>
 </html>

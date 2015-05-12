@@ -9,9 +9,67 @@ var notificationArhive = function(){
     }
 };
 
-var helloApp = angular.module('helloApp', ['ui.keypress']);
-helloApp.service('notificationArhive',notificationArhive );
-helloApp.provider('notificationsService',function(){
+angular.module('helloApp', ['ui.keypress'])
+.service('notificationArhive',notificationArhive )
+.config(function(notificationsServiceProvider){
+    notificationsServiceProvider.setMaxLength(15);
+})
+
+.controller('WorldController', function($scope){
+    $scope.population = 7000;
+    $scope.countries = [
+        {name:'France',population:63.1},
+        {name:'United Kingdom', population:61.8}
+    ];
+    $scope.worldsPercentage = function(countryPopulation){
+        return (countryPopulation/$scope.population)*100;
+    }
+})
+.controller("MessageController",function($scope, notificationsService){
+    $scope.getCurrentNotif = function(){
+        return $scope.notification;
+    };
+    $scope.addToNotif = function(notification){
+        var flag = notificationsService.push(notification);
+         if(flag) {
+             $scope.notification = "";
+             console.log("Complete.....");
+         }
+    }
+})
+.controller('HelloController',function($scope){
+    $scope.getName = function(){
+        return $scope.name;
+    };
+})
+
+.controller("HttpFunctionsController",function($scope, $http){
+    var httpUrl = "https://api.mongolab.com/api/1/databases/angular_js/collections/users";
+
+    $scope.addUser = function() {
+        var newUser = {
+            userName: $scope.userName || 'DefaultUser',
+            userEmail: $scope.userEmail || 'default@yandex.ru'
+        };
+        console.log(JSON.stringify(newUser));
+        var response = $http.post(httpUrl, newUser, {
+            params:{
+                apiKey:"H7NnGFZwutQwxFP6T8Kc_XhkQe4Z4ygX"
+            }
+        });
+        response.success(function(data, status, headers, config){
+            console.log("User has been added "+ data);
+        });
+        response.error(function(){
+
+        });
+
+        $scope.userEmail = "";
+        $scope.userName = "";
+    }
+})
+
+.provider('notificationsService',function(){
     var config = {
         maxLen:10
     };
@@ -39,38 +97,7 @@ helloApp.provider('notificationsService',function(){
         }
     }
 });
-helloApp.config(function(notificationsServiceProvider){
-    notificationsServiceProvider.setMaxLength(15);
-});
-helloApp.controller('HelloController',function($scope){
-    $scope.getName = function(){
-        return $scope.name;
-    };
-});
-helloApp.controller('WorldController', function($scope){
-   $scope.population = 7000;
-   $scope.countries = [
-                       {name:'France',population:63.1},
-                       {name:'United Kingdom', population:61.8}
-                       ];
-    $scope.worldsPercentage = function(countryPopulation){
-        return (countryPopulation/$scope.population)*100;
-    }
-});
 
-helloApp.controller("MessageController",function($scope, notificationsService){
-        $scope.getCurrentNotif = function(){
-          return $scope.notification;
-        };
-        $scope.addToNotif = function(notification){
-            var flag = notificationsService.push(notification);
-            if(flag){
-                $scope.notification = "";
-                console.log("Complete.....");
-            }
-        }
-
-});
 
 
 /*helloApp.factory('notificationsService',function(notificationArchive, MAX_LEN) {
