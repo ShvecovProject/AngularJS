@@ -44,6 +44,7 @@ angular.module('helloApp', ['ui.keypress'])
 })
 
 .controller("HttpFunctionsController",function($scope, $http){
+        $scope.name = "World";
     var getAllUsers = function() {
         var response = $http.get(httpUrl, {
             params: {
@@ -98,6 +99,17 @@ angular.module('helloApp', ['ui.keypress'])
 
         });
         getAllUsers();
+    };
+    $scope.SendJsonp = function(){
+        $http.jsonp( "http://public-api.wordpress.com/rest/v1/sites/wtmpeachtest.wordpress.com/posts?callback=JSON_CALLBACK",{ //'http://cs621417.vk.me/v621417103/c5f2/VU_ynS7wQL4.jpg?callback=JSON_CALLBACK',{ // 'http://angularjs.org/greet.php?callback=JSON_CALLBACK',{
+            params:{
+                name:$scope.name
+            }
+        }).success(function(data){
+            $scope.greeting = JSON.stringify(data);
+        }).error(function(){
+                console.log('error');
+            });
     };
 })
 .provider('notificationsService',function(){
