@@ -86,7 +86,7 @@ angular.module('helloApp', ['ui.keypress'])
         getAllUsers();
     };
     $scope.deleteUser=function(idUser) {
-        var response = $http.delete(httpUrl,idUser,{
+        var response = $http.put(httpUrl+'/'+idUser.$oid,{
             params: {
                 apiKey: "H7NnGFZwutQwxFP6T8Kc_XhkQe4Z4ygX"
             }
